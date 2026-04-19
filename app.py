@@ -1,38 +1,68 @@
 import streamlit as st
 
-# Bagian Header Aplikasi
-st.title("📱 Sistem Rekomendasi HP Sederhana")
-st.write("Sistem Cerdas berbasis Rule (IF-ELSE)")
+st.set_page_config(page_title="Expert System Gaming", page_icon="🎮")
+st.title("🎮 Expert System: Rekomendasi Game Mobile")
+st.write("Sistem ini menggunakan basis pengetahuan untuk mencocokkan spek dan preferensi kamu dengan game yang tepat.")
 
-# Pilihan Input dari Pengguna
-budget = st.selectbox(
-    "Pilih Budget Anda:",
-    ["< 5 juta", "5 - 10 juta", "> 10 juta"]
-)
+# --- SIDEBAR INPUT (USER INTERFACE) ---
+st.sidebar.header("Kumpulkan Fakta")
+f_spek = st.sidebar.selectbox("Spesifikasi HP:", ["Flagship", "Mid-range", "Kentang"])
+f_dana = st.sidebar.radio("Model Bisnis:", ["Gratis (F2P)", "Berbayar (Premium)"])
+f_mode = st.sidebar.radio("Mode Bermain:", ["Solo", "Party (Mabar)"])
+f_genre = st.sidebar.selectbox("Genre Favorit:", ["Action", "MOBA", "RPG", "Strategy", "Casual"])
+f_size = st.sidebar.selectbox("Kapasitas Memori Tersedia:", ["Kecil (< 2GB)", "Sedang (2-10GB)", "Besar (> 10GB)"])
 
-kebutuhan = st.selectbox(
-    "Pilih Kebutuhan Utama:",
-    ["Kamera", "Gaming"]
-)
-
-# Tombol untuk mengeksekusi logika sistem cerdas
-if st.button("Dapatkan Rekomendasi"):
+# --- INFERENCE ENGINE ---
+def inference_engine(spek, dana, mode, genre, size):
+    # Logika Aturan (IF-THEN)
+    if spek == "Kentang" and mode == "Party (Mabar)" and genre == "MOBA":
+        return "Mobile Legends", "Ringan, stabil, dan komunitas mabar sangat besar untuk HP spek rendah."
     
-    # --- LOGIKA IF-ELSE ---
-    if budget == "< 5 juta":
-        if kebutuhan == "Kamera":
-            st.success("Rekomendasi: Fokus pada HP dengan resolusi kamera baik dan fitur OIS. Contoh: Samsung Galaxy A36 dan Redmi Note 15 Pro.")
-        elif kebutuhan == "Gaming":
-            st.success("Rekomendasi: Cari chipset kencang di kelasnya (seperti Mediatek Dimensity atau Snapdragon 7 series). Contoh: POCO X7 pro dan IQOO Neo 10")
-            
-    elif budget == "5 - 10 juta":
-        if kebutuhan == "Kamera":
-            st.success("Rekomendasi: Mid-range ke atas dengan kualitas kamera setara flagship. Contoh: Vivo V70, Xiaomi 15T, Samsung Galaxy S25 FE, atau iPhone 13/14/15.")
-        elif kebutuhan == "Gaming":
-            st.success("Rekomendasi: HP performa tinggi alias 'Flagship Killer'. Contoh: POCO F7, iQOO 15R, Realme GT7 atau Xiaomi 15T pro.")
-            
-    elif budget == "> 10 juta":
-        if kebutuhan == "Kamera":
-            st.success("Rekomendasi: HP Flagship premium dengan lensa periskop dan komputasi AI terbaik. Contoh: Samsung Galaxy S26 Ultra, iPhone 17 Pro Max, atau Vivo X300 Pro.")
-        elif kebutuhan == "Gaming":
-            st.success("Rekomendasi: HP khusus gaming atau flagship super kencang dengan sistem pendingin mumpuni. Contoh: ROG Phone 9, RedMagic 9 Pro, atau iPhone 17 Pro Max.")
+    elif spek == "Flagship" and genre == "RPG" and size == "Besar (> 10GB)":
+        return "Genshin Impact", "Grafik setara konsol butuh chipset flagship dan ruang penyimpanan yang sangat luas."
+    
+    elif spek == "Kentang" and genre == "Action" and mode == "Party (Mabar)":
+        return "Free Fire", "Didesain khusus untuk kompetisi battle royale di perangkat dengan RAM terbatas."
+    
+    elif spek == "Mid-range" and genre == "Action" and mode == "Party (Mabar)":
+        return "Call of Duty Mobile", "Keseimbangan antara grafik tajam dan performa untuk HP kelas menengah."
+    
+    elif dana == "Berbayar (Premium)" and genre == "RPG" and mode == "Solo":
+        return "Stardew Valley", "Salah satu game premium RPG terbaik yang fokus pada pengalaman solo tanpa iklan."
+    
+    elif spek == "Flagship" and dana == "Berbayar (Premium)" and genre == "Action":
+        return "Hitman Blood Money Reprisal", "Memerlukan performa tinggi untuk simulasi stealth yang kompleks."
+    
+    elif genre == "MOBA" and spek in ["Mid-range", "Flagship"] and mode == "Party (Mabar)":
+        return "Honor of Kings / Wild Rift", "Visual lebih HD dan mekanik lebih dalam untuk perangkat yang lebih kuat."
+    
+    elif genre == "Casual" and size == "Kecil (< 2GB)":
+        return "Subway Surfers", "Sangat ringan dan tidak butuh spek atau penyimpanan khusus."
+    
+    elif genre == "Strategy" and mode == "Party (Mabar)":
+        return "Clash of Clans", "Game strategi mabar klasik yang bisa berjalan hampir di semua HP."
+    
+    elif genre == "Strategy" and mode == "Solo" and dana == "Berbayar (Premium)":
+        return "Kingdom Rush Vengeance", "Strategi premium tanpa microtransactions yang mengganggu."
+    
+    elif size == "Besar (> 10GB)" and genre == "Action" and spek == "Flagship":
+        return "Warzone Mobile", "Sangat berat karena render map besar secara real-time, butuh spek paling atas."
+    
+    elif genre == "RPG" and spek == "Kentang":
+        return "Guardian Tales", "RPG bergaya pixel yang ringan namun memiliki cerita yang sangat mendalam."
+    
+    else:
+        return "Roblox", "Platform universal yang menyediakan ribuan jenis game untuk segala kondisi fakta."
+
+# --- OUTPUT (EXPLANATION FACILITY) ---
+if st.button("Jalankan Sistem Pakar"):
+    hasil, alasan = inference_engine(f_spek, f_dana, f_mode, f_genre, f_size)
+    
+    st.markdown("---")
+    st.subheader("Keputusan Sistem:")
+    st.success(f"**Rekomendasi: {hasil}**")
+    
+    st.info(f"**Analisis Pengetahuan:** {alasan}") # Fasilitas penjelasan 
+
+st.markdown("---")
+st.caption("Praktikum 2: Knowledge-Based System - STMIK AMIKOM Surakarta")
